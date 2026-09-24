@@ -1,0 +1,2125 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Série Desafio da Fé — 10 Quizzes</title>
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/basecoat-css@1.0.2/dist/basecoat.cdn.min.css">
+  <style>
+/* Skip artifact shell — fixed styles served beside every artifact.
+   Complements basecoat; artifacts override --accent for their own identity. */
+:root {
+  color-scheme: light dark;
+  --accent: #2563eb;
+  --accent-contrast: #ffffff;
+  --accent-text: color-mix(in srgb, var(--accent) 72%, #000);
+  --bg: #f8f9fb;
+  --surface: #ffffff;
+  --text: #14171f;
+  --text-muted: #5b6472;
+  --border: rgba(20, 23, 31, 0.10);
+  --radius: 10px;
+  --shadow: 0 1px 3px rgba(20, 23, 31, 0.08);
+  --space: 16px;
+}
+/* Theme resolution. Without data-theme the viewer's system preference decides,
+   as it always did. With it, the artifact's own choice wins in BOTH directions:
+   a page that hardcodes one palette must not be handed the opposite set of
+   tokens by the machine it happens to be opened on. The dark values appear
+   twice because a media query cannot be folded into a selector list.
+   The attribute sits inside :where() so these blocks keep the specificity of a
+   bare :root — the page's own <style> is linked after this file and must go on
+   overriding any token it wants, exactly as it could before. */
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    --accent-text: color-mix(in srgb, var(--accent) 78%, #fff);
+    --bg: #101318;
+    --surface: #181c23;
+    --text: #eef1f6;
+    --text-muted: #9aa4b2;
+    --border: rgba(238, 241, 246, 0.12);
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  }
+}
+:root:where([data-theme="dark"]) {
+  color-scheme: dark;
+  --accent-text: color-mix(in srgb, var(--accent) 78%, #fff);
+  --bg: #101318;
+  --surface: #181c23;
+  --text: #eef1f6;
+  --text-muted: #9aa4b2;
+  --border: rgba(238, 241, 246, 0.12);
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+:root:where([data-theme="light"]) { color-scheme: light; }
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+img { max-width: 100%; display: block; }
+
+.shell-container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+.shell-section { padding: calc(var(--space) * 2) 0; }
+.shell-grid { display: grid; gap: var(--space); grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.shell-toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: var(--space); }
+.shell-footer { padding: 24px 0 40px; color: var(--text-muted); font-size: 13px; }
+
+.shell-hero { padding: calc(var(--space) * 3) 0 calc(var(--space) * 2); }
+.shell-hero h1 { font-size: clamp(26px, 4vw, 40px); line-height: 1.15; margin: 0 0 10px; text-wrap: balance; }
+.shell-hero p { color: var(--text-muted); max-width: 60ch; margin: 0; }
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: var(--space);
+}
+
+.kpi { display: flex; flex-direction: column; gap: 4px; }
+.kpi .kpi-value { font-size: 28px; font-weight: 650; line-height: 1.1; }
+.kpi .kpi-label { font-size: 13px; color: var(--text-muted); }
+.kpi .kpi-delta { font-size: 12.5px; font-weight: 600; }
+.kpi .kpi-delta.up { color: #0a8f3c; }
+.kpi .kpi-delta.down { color: #cf3131; }
+
+table.shell-table { border-collapse: collapse; width: 100%; font-size: 14px; }
+table.shell-table th {
+  text-align: left; font-size: 11.5px; letter-spacing: 0.05em; text-transform: uppercase;
+  color: var(--text-muted); font-weight: 600;
+}
+table.shell-table th, table.shell-table td { padding: 9px 12px 9px 0; border-bottom: 1px solid var(--border); }
+table.shell-table td.num, table.shell-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
+table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 6%, transparent); }
+
+.chart-box { width: 100%; min-height: 220px; }
+.chart-box svg { width: 100%; height: auto; display: block; }
+
+.muted { color: var(--text-muted); }
+.accent { color: var(--accent-text); }
+.shell-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent-text);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .shell-fade { animation: shell-fade 400ms ease both; }
+  @keyframes shell-fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+}
+
+</style>
+  
+
+  <style>
+    :root {
+      --accent: #d4af37;
+      --accent-text: #f3cf5a;
+      --accent-contrast: #071426;
+      --gold: #d4af37;
+      --gold-light: #f5d76e;
+      --gold-dark: #aa851c;
+      --bg-dark: #071426;
+      --card-bg: #0f172a;
+      --card-border: #d4af37;
+      --color-green: #22c55e;
+      --color-yellow: #eab308;
+      --color-red: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at 50% 20%, #12345a 0%, #071426 70%, #050d1a 100%);
+      color: #f8fafc;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      padding: 1.5rem 1rem 3rem;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Top Logo styling */
+    .brand-header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .church-logo-wrap {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #ffffff;
+      padding: 8px 18px;
+      border-radius: 9999px;
+      border: 2px solid var(--gold);
+      box-shadow: 0 4px 16px rgba(212, 175, 55, 0.25);
+      margin-bottom: 0.75rem;
+      max-width: 90%;
+    }
+
+    .church-logo-img {
+      max-height: 54px;
+      width: auto;
+      object-fit: contain;
+      display: block;
+    }
+
+    .app-title {
+      color: var(--gold-light);
+      font-size: clamp(1.8rem, 4vw, 2.75rem);
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      text-shadow: 0 2px 14px rgba(212, 175, 55, 0.4);
+      margin-bottom: 0.35rem;
+    }
+
+    .app-subtitle {
+      color: #94a3b8;
+      font-size: clamp(0.95rem, 2vw, 1.15rem);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .app-meta-badge {
+      display: inline-block;
+      background: rgba(212, 175, 55, 0.12);
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      color: var(--gold-light);
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.35rem 0.9rem;
+      border-radius: 20px;
+    }
+
+    /* Screen management */
+    .screen {
+      display: none;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* MENU GRID */
+    .menu-container {
+      max-width: 1100px;
+      margin: 1.5rem auto 0;
+    }
+
+    .quiz-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .quiz-card {
+      background: var(--card-bg);
+      border: 1.5px solid rgba(212, 175, 55, 0.45);
+      border-radius: 1rem;
+      padding: 1.25rem;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+    }
+
+    .quiz-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--gold);
+      box-shadow: 0 12px 28px rgba(212, 175, 55, 0.25);
+    }
+
+    .quiz-card:focus-visible {
+      outline: 3px solid var(--gold);
+      outline-offset: 2px;
+    }
+
+    .quiz-card-head {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.9rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .quiz-card-emoji {
+      font-size: 2.2rem;
+      line-height: 1;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 0.5rem;
+      border-radius: 0.75rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .quiz-card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.3;
+    }
+
+    .quiz-card-desc {
+      color: #cbd5e1;
+      font-size: 0.9rem;
+      line-height: 1.45;
+      margin-bottom: 1rem;
+      flex-grow: 1;
+    }
+
+    .quiz-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 0.75rem;
+    }
+
+    .quiz-card-badge {
+      font-size: 0.78rem;
+      color: var(--gold-light);
+      background: rgba(212, 175, 55, 0.15);
+      padding: 0.25rem 0.6rem;
+      border-radius: 9999px;
+      font-weight: 600;
+    }
+
+    .quiz-card-cta {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    /* GAME SCREEN */
+    .game-container {
+      max-width: 820px;
+      margin: 0 auto;
+    }
+
+    .game-card {
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      border-radius: 1.25rem;
+      padding: clamp(1.2rem, 3vw, 2rem);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+      position: relative;
+    }
+
+    .game-top-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .game-title-crumb {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 700;
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      color: var(--gold-light);
+    }
+
+    .game-counter-pill {
+      background: rgba(212, 175, 55, 0.15);
+      border: 1px solid rgba(212, 175, 55, 0.35);
+      color: #ffffff;
+      padding: 0.35rem 0.85rem;
+      border-radius: 9999px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.05em;
+    }
+
+    /* Progress bar */
+    .progress-track {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #aa851c, var(--gold));
+      width: 10%;
+      transition: width 0.35s ease;
+    }
+
+    /* CIRCULAR TIMER */
+    .timer-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .timer-svg-wrap {
+      position: relative;
+      width: 120px;
+      height: 120px;
+    }
+
+    .timer-svg {
+      transform: rotate(-90deg);
+      width: 120px;
+      height: 120px;
+    }
+
+    .timer-bg-circle {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.1);
+      stroke-width: 8;
+    }
+
+    .timer-progress-circle {
+      fill: none;
+      stroke-width: 8;
+      stroke-linecap: round;
+      stroke-dasharray: 339.292;
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset 0.95s linear, stroke 0.3s ease;
+    }
+
+    .timer-number {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: #ffffff;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .pulse-danger {
+      animation: heartBeat 0.7s infinite ease-in-out;
+    }
+
+    @keyframes heartBeat {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+      100% { transform: scale(1); }
+    }
+
+    /* QUESTION */
+    .question-statement {
+      font-size: clamp(1.2rem, 2.5vw, 1.55rem);
+      font-weight: 700;
+      line-height: 1.4;
+      text-align: center;
+      color: #ffffff;
+      margin-bottom: 1.75rem;
+      padding: 0 0.5rem;
+    }
+
+    /* OPTIONS */
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.85rem;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (min-width: 640px) {
+      .options-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .option-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1.5px solid rgba(255, 255, 255, 0.18);
+      border-radius: 0.85rem;
+      padding: 0.95rem 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      color: #f8fafc;
+      font-size: 1.02rem;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      width: 100%;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      background: rgba(212, 175, 55, 0.12);
+      border-color: var(--gold);
+      transform: translateY(-2px);
+    }
+
+    .option-letter {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: var(--gold-light);
+      flex-shrink: 0;
+    }
+
+    .option-text {
+      flex-grow: 1;
+      line-height: 1.35;
+    }
+
+    .option-btn.correct {
+      background: rgba(34, 197, 94, 0.2) !important;
+      border-color: #22c55e !important;
+      color: #ffffff !important;
+    }
+    .option-btn.correct .option-letter {
+      background: #22c55e;
+      color: #071426;
+      border-color: #22c55e;
+    }
+
+    .option-btn.incorrect {
+      background: rgba(239, 68, 68, 0.2) !important;
+      border-color: #ef4444 !important;
+      color: #ffffff !important;
+    }
+    .option-btn.incorrect .option-letter {
+      background: #ef4444;
+      color: #ffffff;
+      border-color: #ef4444;
+    }
+
+    .option-btn:disabled {
+      cursor: default;
+    }
+
+    /* FEEDBACK CARD */
+    .feedback-box {
+      display: none;
+      border-radius: 0.85rem;
+      padding: 1.1rem 1.25rem;
+      margin-bottom: 1.5rem;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .feedback-box.correct {
+      display: block;
+      background: rgba(34, 197, 94, 0.12);
+      border: 1px solid rgba(34, 197, 94, 0.4);
+    }
+
+    .feedback-box.incorrect {
+      display: block;
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+    }
+
+    .feedback-box.timeout {
+      display: block;
+      background: rgba(234, 179, 8, 0.12);
+      border: 1px solid rgba(234, 179, 8, 0.4);
+    }
+
+    .feedback-header {
+      font-size: 1.1rem;
+      font-weight: 800;
+      margin-bottom: 0.35rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .feedback-box.correct .feedback-header { color: #4ade80; }
+    .feedback-box.incorrect .feedback-header { color: #f87171; }
+    .feedback-box.timeout .feedback-header { color: #facc15; }
+
+    .feedback-ref {
+      font-size: 0.95rem;
+      color: #cbd5e1;
+      line-height: 1.4;
+    }
+
+    .feedback-ref strong {
+      color: #ffffff;
+    }
+
+    /* ACTION BUTTONS */
+    .game-actions {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .btn-gold {
+      background: linear-gradient(135deg, #d4af37 0%, #aa851c 100%);
+      color: #071426;
+      border: none;
+      padding: 0.9rem 1.8rem;
+      font-size: 1.05rem;
+      font-weight: 800;
+      border-radius: 0.75rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.35);
+      transition: all 0.2s ease;
+      letter-spacing: 0.02em;
+    }
+
+    .btn-gold:hover {
+      background: linear-gradient(135deg, #f5d76e 0%, #d4af37 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5);
+    }
+
+    .btn-gold:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1.5px solid rgba(212, 175, 55, 0.6);
+      color: var(--gold-light);
+      padding: 0.85rem 1.4rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+      border-radius: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-outline:hover {
+      background: rgba(212, 175, 55, 0.12);
+      border-color: var(--gold);
+      color: #ffffff;
+    }
+
+    /* RESULT SCREEN */
+    .result-container {
+      max-width: 650px;
+      margin: 1rem auto 0;
+      text-align: center;
+    }
+
+    .result-card {
+      background: var(--card-bg);
+      border: 2px solid var(--gold);
+      border-radius: 1.5rem;
+      padding: clamp(2rem, 5vw, 3rem) clamp(1.5rem, 4vw, 2.5rem);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+      position: relative;
+    }
+
+    .result-trophy {
+      font-size: clamp(3.5rem, 8vw, 5rem);
+      line-height: 1;
+      margin-bottom: 0.75rem;
+      filter: drop-shadow(0 4px 16px rgba(212, 175, 55, 0.4));
+    }
+
+    .result-stars {
+      font-size: 2rem;
+      letter-spacing: 0.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .result-title {
+      font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+      font-weight: 900;
+      color: var(--gold-light);
+      margin-bottom: 0.5rem;
+    }
+
+    .result-score-box {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(212, 175, 55, 0.35);
+      border-radius: 1rem;
+      padding: 1rem 2rem;
+      margin: 1.25rem 0;
+    }
+
+    .result-score-value {
+      font-size: clamp(2.5rem, 6vw, 3.5rem);
+      font-weight: 900;
+      color: #ffffff;
+      line-height: 1;
+    }
+
+    .result-score-label {
+      font-size: 0.95rem;
+      color: #94a3b8;
+      font-weight: 600;
+      margin-top: 0.35rem;
+    }
+
+    .result-msg {
+      font-size: 1.1rem;
+      line-height: 1.5;
+      color: #e2e8f0;
+      margin-bottom: 2rem;
+      padding: 0 1rem;
+    }
+
+    .result-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    /* CONFETTI CANVAS */
+    #confettiCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* FOOTER */
+    .app-footer {
+      text-align: center;
+      margin-top: 3rem;
+      color: #64748b;
+      font-size: 0.85rem;
+    }
+
+    .app-footer strong {
+      color: #94a3b8;
+    }
+
+    /* ACCESSIBILITY FOCUS */
+    button:focus-visible, a:focus-visible {
+      outline: 3px solid var(--gold);
+      outline-offset: 3px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Confetti Canvas -->
+  <canvas id="confettiCanvas"></canvas>
+
+  <!-- ==================== TELA 1: MENU PRINCIPAL ==================== -->
+  <section id="menuScreen" class="screen active">
+    <header class="brand-header">
+      <div class="church-logo-wrap">
+        <img 
+          src="https://adapta-one-prod.s3.sa-east-1.amazonaws.com/alan.izolani%40gmail.com/png/image-01a0d368-1097-73ed-9563-71098792b118.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIA3FLD6RMYLYFE2L2Q%2F20260924%2Fsa-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260924T215333Z&X-Amz-Expires=3600&X-Amz-Signature=99a1303c11bee244dcbc8bcbf5993a553440756cb529f72981d5473105a3195d&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject"
+          alt="Logomarca da Igreja Evangélica Cristo Vive de Paracambi"
+          class="church-logo-img"
+          onerror="this.onerror=null;this.src='logo.jpeg';"
+        >
+      </div>
+      <h1 class="app-title">SÉRIE DESAFIO DA FÉ</h1>
+      <p class="app-subtitle">Quiz Bíblico Interativo — Igreja Evangélica Cristo Vive de Paracambi</p>
+      <div class="app-meta-badge">10 quizzes • 10 perguntas cada • 30 segundos por pergunta</div>
+    </header>
+
+    <main class="menu-container">
+      <div class="quiz-grid" id="quizGrid">
+        <!-- Rendered by JS -->
+      </div>
+    </main>
+
+    <footer class="app-footer">
+      <p>Igreja Evangélica Cristo Vive de Paracambi • Edificando vidas através da Palavra</p>
+    </footer>
+  </section>
+
+
+  <!-- ==================== TELA 2: TELA DE JOGO ==================== -->
+  <section id="gameScreen" class="screen">
+    <header class="brand-header">
+      <div class="church-logo-wrap">
+        <img 
+          src="https://adapta-one-prod.s3.sa-east-1.amazonaws.com/alan.izolani%40gmail.com/png/image-01a0d368-1097-73ed-9563-71098792b118.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIA3FLD6RMYLYFE2L2Q%2F20260924%2Fsa-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260924T215333Z&X-Amz-Expires=3600&X-Amz-Signature=99a1303c11bee244dcbc8bcbf5993a553440756cb529f72981d5473105a3195d&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject"
+          alt="Logomarca da Igreja Evangélica Cristo Vive de Paracambi"
+          class="church-logo-img"
+          onerror="this.onerror=null;this.src='logo.jpeg';"
+        >
+      </div>
+    </header>
+
+    <main class="game-container">
+      <div class="game-card">
+        <!-- Barra de Progresso e Cabeçalho do Quiz -->
+        <div class="game-top-bar">
+          <div class="game-title-crumb">
+            <span id="gameQuizEmoji">📖</span>
+            <span id="gameQuizTitle">Quiz Bíblico</span>
+          </div>
+          <div class="game-counter-pill" id="questionCounter">1 / 10</div>
+        </div>
+
+        <div class="progress-track" aria-label="Progresso do quiz">
+          <div class="progress-fill" id="progressBar"></div>
+        </div>
+
+        <!-- RELÓGIO CIRCULAR -->
+        <div class="timer-section" aria-live="polite">
+          <div class="timer-svg-wrap" id="timerPulseWrap">
+            <svg class="timer-svg" viewBox="0 0 120 120">
+              <circle class="timer-bg-circle" cx="60" cy="60" r="54"></circle>
+              <circle id="timerCircle" class="timer-progress-circle" cx="60" cy="60" r="54" stroke="#22c55e"></circle>
+            </svg>
+            <div class="timer-number" id="timerNumber">30</div>
+          </div>
+        </div>
+
+        <!-- PERGUNTA -->
+        <h2 class="question-statement" id="questionText">Carregando pergunta...</h2>
+
+        <!-- ALTERNATIVAS -->
+        <div class="options-grid" id="optionsGrid" role="group" aria-label="Opções de resposta">
+          <!-- Gerado dinamicamente -->
+        </div>
+
+        <!-- FEEDBACK -->
+        <div class="feedback-box" id="feedbackBox" role="status" aria-live="polite">
+          <div class="feedback-header" id="feedbackTitle">✅ Resposta Correta!</div>
+          <div class="feedback-ref" id="feedbackRef">Referência: Gênesis 1:1</div>
+        </div>
+
+        <!-- BOTÕES DE AÇÃO -->
+        <div class="game-actions">
+          <button class="btn-outline" id="btnAbandonQuiz" onclick="returnToMenu()">🏠 Sair</button>
+          <button class="btn-gold" id="btnNextQuestion" style="display: none;" onclick="goToNextQuestion()">
+            PRÓXIMA PERGUNTA ➜
+          </button>
+        </div>
+      </div>
+    </main>
+  </section>
+
+
+  <!-- ==================== TELA 3: TELA DE RESULTADO ==================== -->
+  <section id="resultScreen" class="screen">
+    <header class="brand-header">
+      <div class="church-logo-wrap">
+        <img 
+          src="https://adapta-one-prod.s3.sa-east-1.amazonaws.com/alan.izolani%40gmail.com/png/image-01a0d368-1097-73ed-9563-71098792b118.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIA3FLD6RMYLYFE2L2Q%2F20260924%2Fsa-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260924T215333Z&X-Amz-Expires=3600&X-Amz-Signature=99a1303c11bee244dcbc8bcbf5993a553440756cb529f72981d5473105a3195d&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject"
+          alt="Logomarca da Igreja Evangélica Cristo Vive de Paracambi"
+          class="church-logo-img"
+          onerror="this.onerror=null;this.src='logo.jpeg';"
+        >
+      </div>
+    </header>
+
+    <main class="result-container">
+      <div class="result-card">
+        <div class="result-trophy" id="resultTrophy">🏆</div>
+        <div class="result-stars" id="resultStars">⭐⭐⭐⭐⭐</div>
+        <h2 class="result-title" id="resultTitle">Excelente Desempenho!</h2>
+
+        <div class="result-score-box">
+          <div class="result-score-value" id="resultScore">1000</div>
+          <div class="result-score-label">pontos de 1000 possíveis</div>
+        </div>
+
+        <p class="result-msg" id="resultMessage">
+          Parabéns! Seu conhecimento bíblico é impressionante. Continue firme crescendo na graça e no conhecimento!
+        </p>
+
+        <div class="result-buttons">
+          <button class="btn-gold" onclick="restartCurrentQuiz()">
+            🔄 JOGAR NOVAMENTE
+          </button>
+          <button class="btn-outline" onclick="returnToMenu()">
+            🏠 VOLTAR AO MENU
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <footer class="app-footer">
+      <p>Igreja Evangélica Cristo Vive de Paracambi • Desafio da Fé</p>
+    </footer>
+  </section>
+
+  <script>
+    /* ==========================================================================
+       EDITAR AQUI: substitua ou adicione quizzes e perguntas
+       ========================================================================== */
+    const QUIZZES_DATA = [
+      {
+        id: 1,
+        title: "Gênesis e a Criação",
+        emoji: "🌍",
+        desc: "O princípio de todas as coisas, a criação do homem, o Éden e o dilúvio.",
+        questions: [
+          {
+            q: "Em quantos dias Deus criou o céu e a terra?",
+            options: ["Seis", "Sete", "Cinco", "Dez"],
+            correct: "Seis",
+            ref: "Gênesis 2:2 — E havendo Deus acabado no dia sétimo a obra que fizera, descansou no sétimo dia."
+          },
+          {
+            q: "O que Deus criou no primeiro dia?",
+            options: ["A luz", "O céu", "Os animais", "O sol"],
+            correct: "A luz",
+            ref: "Gênesis 1:3 — Disse Deus: Haja luz; e houve luz."
+          },
+          {
+            q: "De que Deus formou o homem?",
+            options: ["Pó da terra", "Barro", "Madeira", "Pedra"],
+            correct: "Pó da terra",
+            ref: "Gênesis 2:7 — E formou o Senhor Deus o homem do pó da terra e soprou em seus narizes o fôlego da vida."
+          },
+          {
+            q: "Qual era o nome do primeiro filho de Adão e Eva?",
+            options: ["Caim", "Abel", "Sete", "Enoque"],
+            correct: "Caim",
+            ref: "Gênesis 4:1 — E conheceu Adão a Eva, sua mulher, e ela concebeu e deu à luz a Caim."
+          },
+          {
+            q: "Qual árvore Deus proibiu no Éden?",
+            options: [
+              "A árvore do conhecimento do bem e do mal",
+              "A árvore da vida",
+              "A árvore da sabedoria",
+              "A árvore da imortalidade"
+            ],
+            correct: "A árvore do conhecimento do bem e do mal",
+            ref: "Gênesis 2:17 — Mas da árvore do conhecimento do bem e do mal, dela não comerás."
+          },
+          {
+            q: "Quem foi o primeiro assassino da Bíblia?",
+            options: ["Caim", "Lameque", "Esaú", "Absalão"],
+            correct: "Caim",
+            ref: "Gênesis 4:8 — E levantou-se Caim contra o seu irmão Abel, e o matou."
+          },
+          {
+            q: "O que Noé construiu para salvar sua família do dilúvio?",
+            options: ["Uma arca", "Uma torre", "Um templo", "Um palácio"],
+            correct: "Uma arca",
+            ref: "Gênesis 6:14 — Faze para ti uma arca da madeira de gofer."
+          },
+          {
+            q: "Quantos dias e noites choveu no dilúvio?",
+            options: ["40", "7", "30", "100"],
+            correct: "40",
+            ref: "Gênesis 7:12 — E houve copiosa chuva sobre a terra quarenta dias e quarenta noites."
+          },
+          {
+            q: "Qual foi o sinal da aliança de Deus com Noé?",
+            options: ["O arco-íris", "Uma estrela", "Uma pomba", "Um altar"],
+            correct: "O arco-íris",
+            ref: "Gênesis 9:13 — O meu arco tenho posto nas nuvens; este será por sinal da aliança entre mim e a terra."
+          },
+          {
+            q: "Qual cidade foi destruída com fogo e enxofre?",
+            options: ["Sodoma", "Jericó", "Babilônia", "Nínive"],
+            correct: "Sodoma",
+            ref: "Gênesis 19:24 — Então o Senhor fez chover enxofre e fogo, do Senhor desde os céus, sobre Sodoma e Gomorra."
+          }
+        ]
+      },
+      {
+        id: 2,
+        title: "Personagens Bíblicos",
+        emoji: "👤",
+        desc: "Homens e mulheres de fé que marcaram a história do povo de Deus.",
+        questions: [
+          {
+            q: "Quem é chamado de 'pai da fé'?",
+            options: ["Abraão", "Moisés", "Davi", "José"],
+            correct: "Abraão",
+            ref: "Gênesis 17:5 — Serás pai de muitas nações."
+          },
+          {
+            q: "Quem interpretou os sonhos do faraó?",
+            options: ["José", "Daniel", "Samuel", "Elias"],
+            correct: "José",
+            ref: "Gênesis 41 — José interpretou os sonhos das vacas e das espigas e foi posto como governador do Egito."
+          },
+          {
+            q: "Qual profeta foi engolido por um grande peixe?",
+            options: ["Jonas", "Pedro", "Paulo", "Elias"],
+            correct: "Jonas",
+            ref: "Jonas 1:17 — Preparou o Senhor um grande peixe, para que tragasse a Jonas."
+          },
+          {
+            q: "Quem foi o homem mais forte da Bíblia?",
+            options: ["Sansão", "Golias", "Davi", "Saul"],
+            correct: "Sansão",
+            ref: "Juízes 16 — O Senhor lhe concedeu força extraordinária para livrar Israel."
+          },
+          {
+            q: "Qual rainha salvou seu povo da destruição?",
+            options: ["Ester", "Débora", "Rute", "Jael"],
+            correct: "Ester",
+            ref: "Ester 7 — A rainha Ester intercedeu com bravura perante o rei Assuero pelo povo judeu."
+          },
+          {
+            q: "Quem foi o homem mais sábio de sua época?",
+            options: ["Salomão", "Davi", "Moisés", "Daniel"],
+            correct: "Salomão",
+            ref: "1 Reis 4:29-31 — E deu Deus a Salomão sabedoria, e muitíssimo entendimento."
+          },
+          {
+            q: "Qual profeta foi levado ao céu num redemoinho?",
+            options: ["Elias", "Eliseu", "Isaías", "Enoque"],
+            correct: "Elias",
+            ref: "2 Reis 2:11 — Eis um carro de fogo, com cavalos de fogo... e Elias subiu ao céu num redemoinho."
+          },
+          {
+            q: "Quem era o irmão mais novo de José?",
+            options: ["Benjamim", "Rúben", "Levi", "Judá"],
+            correct: "Benjamim",
+            ref: "Gênesis 42:4 — A Benjamim, porém, irmão de José, não enviou Jacó com seus irmãos."
+          },
+          {
+            q: "Qual homem perdeu tudo, mas permaneceu fiel a Deus?",
+            options: ["Jó", "Jonas", "Pedro", "Lázaro"],
+            correct: "Jó",
+            ref: "Jó 1 — Em tudo isto Jó não pecou, nem atribuiu a Deus falta alguma."
+          },
+          {
+            q: "Quem foi o primeiro rei de Israel?",
+            options: ["Saul", "Davi", "Salomão", "Jeroboão"],
+            correct: "Saul",
+            ref: "1 Samuel 10 — Samuel ungiu a Saul por príncipe sobre a herança do Senhor."
+          }
+        ]
+      },
+      {
+        id: 3,
+        title: "Jesus e os Evangelhos",
+        emoji: "✝️",
+        desc: "A vida, milagres, morte e gloriosa ressurreição do Filho de Deus.",
+        questions: [
+          {
+            q: "Em qual cidade Jesus nasceu?",
+            options: ["Belém", "Nazaré", "Jerusalém", "Cafarnaum"],
+            correct: "Belém",
+            ref: "Mateus 2:1 — Tendo Jesus nascido em Belém da Judeia, em dias do rei Herodes."
+          },
+          {
+            q: "Quem batizou Jesus no rio Jordão?",
+            options: ["João Batista", "Pedro", "André", "Tiago"],
+            correct: "João Batista",
+            ref: "Mateus 3:13 — Então veio Jesus da Galileia ter com João junto do Jordão, para ser batizado por ele."
+          },
+          {
+            q: "Quantos apóstolos Jesus escolheu?",
+            options: ["12", "10", "7", "70"],
+            correct: "12",
+            ref: "Lucas 6:13 — Chamou a si os seus discípulos, e escolheu doze deles, a quem também chamou apóstolos."
+          },
+          {
+            q: "Qual era a profissão de Pedro e André?",
+            options: ["Pescadores", "Carpinteiros", "Cobradores de impostos", "Agricultores"],
+            correct: "Pescadores",
+            ref: "Mateus 4:18 — Viu dois irmãos, Simão, chamado Pedro, e André... porque eram pescadores."
+          },
+          {
+            q: "Em qual cidade Jesus fez seu primeiro milagre?",
+            options: ["Caná da Galileia", "Nazaré", "Jerusalém", "Betânia"],
+            correct: "Caná da Galileia",
+            ref: "João 2:1-11 — Jesus principiou assim os seus sinais em Caná da Galileia, transformando água em vinho."
+          },
+          {
+            q: "Quem traiu Jesus por 30 moedas de prata?",
+            options: ["Judas Iscariotes", "Pedro", "Tomé", "Bartolomeu"],
+            correct: "Judas Iscariotes",
+            ref: "Mateus 26:14-15 — Que me quereis dar, e eu vo-lo entregarei? E eles lhe pesaram trinta moedas de prata."
+          },
+          {
+            q: "Qual discípulo negou Jesus três vezes?",
+            options: ["Pedro", "João", "Tiago", "André"],
+            correct: "Pedro",
+            ref: "Lucas 22:61 — Antes que o galo cante hoje, três vezes me negarás."
+          },
+          {
+            q: "Em qual dia da semana Jesus ressuscitou?",
+            options: ["Domingo", "Sábado", "Sexta-feira", "Segunda-feira"],
+            correct: "Domingo",
+            ref: "Marcos 16:9 — E Jesus, tendo ressuscitado na manhã do primeiro dia da semana (domingo), apareceu primeiramente a Maria Madalena."
+          },
+          {
+            q: "Quem ajudou Jesus a carregar a cruz?",
+            options: ["Simão Cireneu", "José de Arimateia", "Nicodemos", "Barrabás"],
+            correct: "Simão Cireneu",
+            ref: "Mateus 27:32 — Encontraram um homem cireneu, por nome Simão; a este constrangeram a levar a sua cruz."
+          },
+          {
+            q: "Qual o nome do lugar onde Jesus foi crucificado?",
+            options: ["Gólgota", "Getsêmani", "Betânia", "Emaús"],
+            correct: "Gólgota",
+            ref: "João 19:17 — E, levando ele às costas a sua cruz, saiu para o lugar chamado Caveira, que em hebraico se chama Gólgota."
+          }
+        ]
+      },
+      {
+        id: 4,
+        title: "Os Profetas",
+        emoji: "📜",
+        desc: "As vozes e visões que proclamaram a palavra do Deus Todo-Poderoso.",
+        questions: [
+          {
+            q: "Qual profeta foi alimentado por corvos?",
+            options: ["Elias", "Eliseu", "Isaías", "Jeremias"],
+            correct: "Elias",
+            ref: "1 Reis 17:2-6 — E os corvos lhe traziam pão e carne pela manhã; como também pão e carne à noite."
+          },
+          {
+            q: "Qual profeta viu um vale de ossos secos voltar à vida?",
+            options: ["Ezequiel", "Daniel", "Oséias", "Amós"],
+            correct: "Ezequiel",
+            ref: "Ezequiel 37 — O Espírito do Senhor pôs Ezequiel no meio de um vale que estava cheio de ossos secos."
+          },
+          {
+            q: "Qual profeta foi lançado na cova dos leões?",
+            options: ["Daniel", "Jeremias", "Jonas", "Miqueias"],
+            correct: "Daniel",
+            ref: "Daniel 6 — O rei ordenou que trouxessem a Daniel, e o lançaram na cova dos leões."
+          },
+          {
+            q: "Qual profeta teve a visão do trono de Deus e dos serafins?",
+            options: ["Isaías", "Ezequiel", "Joel", "Habacuque"],
+            correct: "Isaías",
+            ref: "Isaías 6 — No ano em que morreu o rei Uzias, eu vi ao Senhor assentado sobre um alto e sublime trono."
+          },
+          {
+            q: "Qual profeta usou seu casamento como símbolo do amor de Deus?",
+            options: ["Oséias", "Amós", "Naum", "Sofonias"],
+            correct: "Oséias",
+            ref: "Oséias 1:2 — Vai, toma uma mulher de prostituições... porque a terra se prostituiu, desviando-se do Senhor."
+          },
+          {
+            q: "Qual profeta disse 'não sei falar, porque sou criança'?",
+            options: ["Jeremias", "Isaías", "Ezequiel", "Miqueias"],
+            correct: "Jeremias",
+            ref: "Jeremias 1:6 — Então disse eu: Ah, Senhor Deus! Eis que não sei falar; porque ainda sou uma criança."
+          },
+          {
+            q: "Qual profeta foi enviado para pregar em Nínive?",
+            options: ["Jonas", "Naum", "Joel", "Obadias"],
+            correct: "Jonas",
+            ref: "Jonas 1:1-2 — Levanta-te, vai à grande cidade de Nínive, e clama contra ela."
+          },
+          {
+            q: "Qual profeta sucedeu Elias?",
+            options: ["Eliseu", "Samuel", "Gade", "Natã"],
+            correct: "Eliseu",
+            ref: "2 Reis 2:9-15 — Peço-te que haja porção dobrada do teu espírito sobre mim... e o espírito de Elias repousou sobre Eliseu."
+          },
+          {
+            q: "Qual profeta anunciou que uma virgem conceberia?",
+            options: ["Isaías", "Jeremias", "Ezequiel", "Daniel"],
+            correct: "Isaías",
+            ref: "Isaías 7:14 — Eis que a virgem conceberá, e dará à luz um filho, e chamará o seu nome Emanuel."
+          },
+          {
+            q: "Qual profeta interpretou a escrita na parede para Belsazar?",
+            options: ["Daniel", "Ezequiel", "Jeremias", "Ageu"],
+            correct: "Daniel",
+            ref: "Daniel 5 — Daniel interpretou: MENE, MENE, TEQUEL, UPARSIM."
+          }
+        ]
+      },
+      {
+        id: 5,
+        title: "Mulheres da Bíblia",
+        emoji: "👩",
+        desc: "Exemplos marcantes de fé, coragem, intercessão e lealdade.",
+        questions: [
+          {
+            q: "Qual mulher escondeu os espias em Jericó?",
+            options: ["Raabe", "Débora", "Rute", "Abigail"],
+            correct: "Raabe",
+            ref: "Josué 2 — Raabe escondeu os espias em seu telhado sob as canas de linho."
+          },
+          {
+            q: "Qual mulher foi juíza em Israel?",
+            options: ["Débora", "Ester", "Ana", "Miriã"],
+            correct: "Débora",
+            ref: "Juízes 4:4 — E Débora, mulher profetisa... julgava a Israel naquele tempo."
+          },
+          {
+            q: "Qual mulher disse 'aonde quer que fores, irei'?",
+            options: ["Rute", "Noemi", "Ester", "Raabe"],
+            correct: "Rute",
+            ref: "Rute 1:16 — Disse, porém, Rute: Não me instes para que te abandone... aonde quer que fores, irei."
+          },
+          {
+            q: "Qual rainha foi destituída por desobedecer ao rei?",
+            options: ["Vasti", "Ester", "Jezabel", "Atalia"],
+            correct: "Vasti",
+            ref: "Ester 1:12 — Porém a rainha Vasti recusou vir segundo a palavra do rei."
+          },
+          {
+            q: "Quem foi a primeira pessoa a ver Jesus ressuscitado?",
+            options: ["Maria Madalena", "Maria mãe de Jesus", "Marta", "Salomé"],
+            correct: "Maria Madalena",
+            ref: "João 20:14-18 — Disse-lhe Jesus: Maria! Ela, voltando-se, disse-lhe: Raboni (que quer dizer, Mestre)."
+          },
+          {
+            q: "Qual mulher orou por um filho e o dedicou ao Senhor?",
+            options: ["Ana", "Isabel", "Sara", "Rebeca"],
+            correct: "Ana",
+            ref: "1 Samuel 1 — Por este menino orava eu; e o Senhor atendeu à minha petição."
+          },
+          {
+            q: "Qual irmã de Moisés o vigiou no rio?",
+            options: ["Miriã", "Débora", "Raabe", "Ester"],
+            correct: "Miriã",
+            ref: "Êxodo 2:4 — E sua irmã postou-se de longe, para saber o que lhe havia de acontecer."
+          },
+          {
+            q: "Qual mulher samaritana conversou com Jesus no poço?",
+            options: ["A mulher samaritana", "Maria Madalena", "Marta", "Lídia"],
+            correct: "A mulher samaritana",
+            ref: "João 4:7 — Veio uma mulher de Samaria tirar água; disse-lhe Jesus: Dá-me de beber."
+          },
+          {
+            q: "Qual mulher abriu sua casa para Paulo e Silas?",
+            options: ["Lídia", "Priscila", "Febe", "Dorcas"],
+            correct: "Lídia",
+            ref: "Atos 16:14-15 — Lídia, vendedora de púrpura... nos rogou, dizendo: Se haveis julgado que eu seja fiel ao Senhor, entrai em minha casa."
+          },
+          {
+            q: "Qual avó de Timóteo era conhecida por sua fé?",
+            options: ["Loide", "Eunice", "Priscila", "Ana"],
+            correct: "Loide",
+            ref: "2 Timóteo 1:5 — Pela fé não fingida que em ti há, a qual habitou primeiro em tua avó Loide, e em tua mãe Eunice."
+          }
+        ]
+      },
+      {
+        id: 6,
+        title: "Apóstolos e a Igreja Primitiva",
+        emoji: "🔥",
+        desc: "O derramar de Pentecostes, viagens missionárias e a expansão do Evangelho.",
+        questions: [
+          {
+            q: "Qual apóstolo era cobrador de impostos?",
+            options: ["Mateus", "Pedro", "João", "Tiago"],
+            correct: "Mateus",
+            ref: "Mateus 9:9 — E Jesus... viu um homem, chamado Mateus, assentado na recebedoria de impostos, e disse-lhe: Segue-me."
+          },
+          {
+            q: "Qual apóstolo era chamado de 'Dídimo' (o gêmeo)?",
+            options: ["Tomé", "Filipe", "Bartolomeu", "Judas"],
+            correct: "Tomé",
+            ref: "João 11:16 — Disse, pois, Tomé, chamado Dídimo, aos condiscípulos: Vamos nós também, para morrermos com ele."
+          },
+          {
+            q: "Quem foi escolhido para substituir Judas Iscariotes?",
+            options: ["Matias", "Barnabé", "Estêvão", "Silas"],
+            correct: "Matias",
+            ref: "Atos 1:26 — E, lançando-lhes sortes, caiu a sorte sobre Matias. E por voto comum foi contado com os onze apóstolos."
+          },
+          {
+            q: "Qual era o nome romano de Saulo de Tarso?",
+            options: ["Paulo", "Silas", "Tito", "Timóteo"],
+            correct: "Paulo",
+            ref: "Atos 13:9 — Todavia Saulo, que também se chama Paulo, cheio do Espírito Santo..."
+          },
+          {
+            q: "Quem foi o primeiro mártir da igreja?",
+            options: ["Estêvão", "Tiago", "Pedro", "André"],
+            correct: "Estêvão",
+            ref: "Atos 7:59-60 — E apedrejaram a Estêvão que em invocação dizia: Senhor Jesus, recebe o meu espírito."
+          },
+          {
+            q: "Qual escritor do Novo Testamento era médico?",
+            options: ["Lucas", "Marcos", "Mateus", "João"],
+            correct: "Lucas",
+            ref: "Colossenses 4:14 — Saúda-vos Lucas, o médico amado, e Demas."
+          },
+          {
+            q: "Qual apóstolo era chamado de 'filho do trovão'?",
+            options: ["João", "Pedro", "André", "Filipe"],
+            correct: "João",
+            ref: "Marcos 3:17 — E a Tiago... e a João, irmão de Tiago, aos quais pôs o nome de Boanerges, que significa: Filhos do trovão."
+          },
+          {
+            q: "Em qual festa o Espírito Santo desceu sobre os discípulos?",
+            options: ["Pentecostes", "Páscoa", "Natal", "Tabernáculos"],
+            correct: "Pentecostes",
+            ref: "Atos 2:1 — E, cumprindo-se o dia de Pentecostes, estavam todos reunidos no mesmo lugar."
+          },
+          {
+            q: "Qual discípula fazia túnicas e foi ressuscitada por Pedro?",
+            options: ["Dorcas", "Lídia", "Priscila", "Febe"],
+            correct: "Dorcas",
+            ref: "Atos 9:36-41 — Havia em Jope uma discípula chamada Tabita, que traduzido se diz Dorcas."
+          },
+          {
+            q: "Quem acompanhou Paulo na primeira viagem missionária?",
+            options: ["Barnabé", "Silas", "Timóteo", "Tito"],
+            correct: "Barnabé",
+            ref: "Atos 13:2 — Disse o Espírito Santo: Apartai-me a Barnabé e a Saulo para a obra a que os tenho chamado."
+          }
+        ]
+      },
+      {
+        id: 7,
+        title: "Reis de Israel e Judá",
+        emoji: "👑",
+        desc: "Coroas, batalhas, quedas e o governo do povo sob os monarcas bíblicos.",
+        questions: [
+          {
+            q: "Qual rei construiu o templo em Jerusalém?",
+            options: ["Salomão", "Davi", "Saul", "Josias"],
+            correct: "Salomão",
+            ref: "1 Reis 6 — Salomão edificou a casa do Senhor em Jerusalém com toda magnificência."
+          },
+          {
+            q: "Qual rei foi pastor de ovelhas antes de reinar?",
+            options: ["Davi", "Salomão", "Saul", "Ezequias"],
+            correct: "Davi",
+            ref: "1 Samuel 16:11 — Disse mais Samuel a Jessé: Acabaram-se os moços? E disse: Ainda falta o menor, e eis que apascenta as ovelhas."
+          },
+          {
+            q: "Qual jovem derrotou o gigante Golias?",
+            options: ["Davi", "Saul", "Jônatas", "Abner"],
+            correct: "Davi",
+            ref: "1 Samuel 17 — Davi prevaleceu contra o filisteu com uma funda e com uma pedra."
+          },
+          {
+            q: "Qual rainha mandou matar os profetas do Senhor?",
+            options: ["Jezabel", "Atalia", "Ester", "Vasti"],
+            correct: "Jezabel",
+            ref: "1 Reis 18:4 — Jezabel destruía os profetas do Senhor, porém Obadias escondeu cem profetas em cavernas."
+          },
+          {
+            q: "Qual rei viu uma mão escrevendo na parede?",
+            options: ["Belsazar", "Nabucodonosor", "Ciro", "Dario"],
+            correct: "Belsazar",
+            ref: "Daniel 5:5 — Na mesma hora saíram uns dedos de mão de homem, e escreviam, defronte do castiçal, na estucada da parede."
+          },
+          {
+            q: "Qual rei foi humilhado por causa de sua soberba?",
+            options: ["Nabucodonosor", "Salomão", "Saul", "Roboão"],
+            correct: "Nabucodonosor",
+            ref: "Daniel 4 — O rei foi expulso do meio dos homens e comeu erva como os bois até reconhecer a soberania de Deus."
+          },
+          {
+            q: "Qual rei encontrou o livro da Lei e promoveu uma reforma?",
+            options: ["Josias", "Ezequias", "Asa", "Joás"],
+            correct: "Josias",
+            ref: "2 Reis 22 — O sumo sacerdote Hilquias achou o livro da Lei na casa do Senhor, e Josias rasgou suas vestes."
+          },
+          {
+            q: "Qual rei era filho de Davi e Bate-Seba?",
+            options: ["Salomão", "Absalão", "Adonias", "Amnom"],
+            correct: "Salomão",
+            ref: "2 Samuel 12:24 — E ela teve um filho, e chamou o seu nome Salomão; e o Senhor o amou."
+          },
+          {
+            q: "Qual rei mandou decapitar João Batista?",
+            options: ["Herodes", "Faraó", "César", "Agripa"],
+            correct: "Herodes",
+            ref: "Marcos 6:27 — E enviando logo o rei o executor, mandou que lhe trouxessem a cabeça de João."
+          },
+          {
+            q: "Qual rei de Judá foi curado e ganhou mais 15 anos de vida?",
+            options: ["Ezequias", "Josias", "Manassés", "Uzias"],
+            correct: "Ezequias",
+            ref: "2 Reis 20:1-6 — Ouvi a tua oração... e acrescentarei aos teus dias quinze anos."
+          }
+        ]
+      },
+      {
+        id: 8,
+        title: "Milagres da Bíblia",
+        emoji: "✨",
+        desc: "Sinais maravilhosos, prodígios e curas operados pelo poder do Altíssimo.",
+        questions: [
+          {
+            q: "Qual profeta multiplicou o azeite da viúva?",
+            options: ["Eliseu", "Elias", "Moisés", "Josué"],
+            correct: "Eliseu",
+            ref: "2 Reis 4 — O azeite da botija continuou enchendo todos os vasos vazios emprestados."
+          },
+          {
+            q: "Quem fez o sol parar durante a batalha?",
+            options: ["Josué", "Moisés", "Elias", "Samuel"],
+            correct: "Josué",
+            ref: "Josué 10:12-13 — Sol, detém-te em Gibeom, e tu, lua, no vale de Ajalom. E o sol se deteve."
+          },
+          {
+            q: "Quem dividiu o Mar Vermelho?",
+            options: ["Moisés", "Josué", "Elias", "Eliseu"],
+            correct: "Moisés",
+            ref: "Êxodo 14:21 — E Moisés estendeu a sua mão sobre o mar, e o Senhor fez retirar o mar por um forte vento oriental."
+          },
+          {
+            q: "Quem derrubou as muralhas de Jericó?",
+            options: ["Josué", "Moisés", "Gideão", "Sansão"],
+            correct: "Josué",
+            ref: "Josué 6:20 — Gritou, pois, o povo, tocando os sacerdotes as buzinas... e o muro caiu abaixo."
+          },
+          {
+            q: "Quantos pães e peixes Jesus usou para alimentar 5.000 homens?",
+            options: ["5 pães e 2 peixes", "7 pães e 2 peixes", "2 pães e 5 peixes", "10 pães e 5 peixes"],
+            correct: "5 pães e 2 peixes",
+            ref: "João 6:9 — Está aqui um rapaz que tem cinco pães de cevada e dois peixinhos; mas que é isto para tantos?"
+          },
+          {
+            q: "Qual amigo de Jesus foi ressuscitado após quatro dias?",
+            options: ["Lázaro", "Jairo", "Nicodemos", "Bartimeu"],
+            correct: "Lázaro",
+            ref: "João 11:43-44 — E, tendo dito isto, clamou com grande voz: Lázaro, sai para fora. E o defunto saiu."
+          },
+          {
+            q: "Qual profeta orou e o fogo desceu do céu no Monte Carmelo?",
+            options: ["Elias", "Eliseu", "Moisés", "Samuel"],
+            correct: "Elias",
+            ref: "1 Reis 18:38 — Então caiu fogo do Senhor, e consumiu o holocausto, e a lenha, e as pedras, e o pó."
+          },
+          {
+            q: "Qual profeta ressuscitou o filho da viúva de Sarepta?",
+            options: ["Elias", "Eliseu", "Isaías", "Gideão"],
+            correct: "Elias",
+            ref: "1 Reis 17:22 — E o Senhor ouviu a voz de Elias; e a alma do menino tornou a entrar nele, e reviveu."
+          },
+          {
+            q: "Qual mulher foi curada ao tocar nas vestes de Jesus?",
+            options: [
+              "A mulher com fluxo de sangue",
+              "A sogra de Pedro",
+              "A mulher samaritana",
+              "Maria Madalena"
+            ],
+            correct: "A mulher com fluxo de sangue",
+            ref: "Marcos 5:25-34 — Porque dizia: Se tão-somente tocar nas suas vestes, sararei."
+          },
+          {
+            q: "Qual cego foi curado por Jesus em Jericó?",
+            options: ["Bartimeu", "Lázaro", "Zaqueu", "Jairo"],
+            correct: "Bartimeu",
+            ref: "Marcos 10:46-52 — Bartimeu, o cego, filho de Timeu... disse-lhe Jesus: Vai, a tua fé te salvou."
+          }
+        ]
+      },
+      {
+        id: 9,
+        title: "Parábolas de Jesus",
+        emoji: "🌱",
+        desc: "Lições eternas contadas pelo Mestre sobre o Reino dos Céus e o amor do Pai.",
+        questions: [
+          {
+            q: "Qual parábola fala do filho que desperdiçou sua herança?",
+            options: ["O Filho Pródigo", "O Bom Samaritano", "A Ovelha Perdida", "O Semeador"],
+            correct: "O Filho Pródigo",
+            ref: "Lucas 15 — O filho mais jovem ajuntou tudo, partiu para uma terra longínqua e ali desperdiçou a sua fazenda."
+          },
+          {
+            q: "Qual parábola ensina quem é o nosso próximo?",
+            options: ["O Bom Samaritano", "O Fariseu e o Publicano", "O Rico e Lázaro", "A Dracma Perdida"],
+            correct: "O Bom Samaritano",
+            ref: "Lucas 10:30-37 — Mas um samaritano, que ia de viagem, chegou ao pé dele e, vendo-o, moveu-se de íntima compaixão."
+          },
+          {
+            q: "Qual parábola fala de um homem que achou um tesouro escondido?",
+            options: ["O Tesouro Escondido", "O Semeador", "O Joio e o Trigo", "A Pérola"],
+            correct: "O Tesouro Escondido",
+            ref: "Mateus 13:44 — O Reino dos céus é semelhante a um tesouro escondido num campo, que um homem achou e escondeu."
+          },
+          {
+            q: "Qual parábola fala de sementes que caem em diferentes terrenos?",
+            options: ["O Semeador", "O Joio e o Trigo", "O Grão de Mostarda", "A Figueira"],
+            correct: "O Semeador",
+            ref: "Mateus 13:3-8 — Eis que o semeador saiu a semear; e, quando semeava, uma parte da semente caiu ao pé do caminho..."
+          },
+          {
+            q: "Qual parábola fala do pastor que deixa 99 ovelhas?",
+            options: ["A Ovelha Perdida", "O Bom Pastor", "O Semeador", "A Dracma Perdida"],
+            correct: "A Ovelha Perdida",
+            ref: "Lucas 15:4 — Que homem dentre vós, tendo cem ovelhas, e perdendo uma delas, não deixa no deserto as noventa e nove, e vai após a perdida?"
+          },
+          {
+            q: "Qual parábola compara o Reino dos Céus a um grão pequenino?",
+            options: ["O Grão de Mostarda", "O Tesouro Escondido", "A Pérola", "O Fermento"],
+            correct: "O Grão de Mostarda",
+            ref: "Mateus 13:31-32 — O Reino dos céus é semelhante ao grão de mostarda que um homem pegou e semeou no seu campo."
+          },
+          {
+            q: "Qual parábola fala de dois homens orando no templo?",
+            options: ["O Fariseu e o Publicano", "O Bom Samaritano", "O Rico e Lázaro", "O Juiz Iníquo"],
+            correct: "O Fariseu e o Publicano",
+            ref: "Lucas 18:10-14 — Dois homens subiram ao templo, para orar; um, fariseu, e o outro, publicano."
+          },
+          {
+            q: "Qual parábola fala do servo que não perdoou uma grande dívida?",
+            options: ["O Servo Implacável", "O Filho Pródigo", "O Bom Samaritano", "O Rico Insensato"],
+            correct: "O Servo Implacável",
+            ref: "Mateus 18:23-35 — Saindo, porém, aquele servo, encontrou um dos seus conservos, que lhe devia cem dinheiros... e sufocava-o."
+          },
+          {
+            q: "Qual parábola fala de talentos entregues a servos?",
+            options: ["Os Talentos", "As Minas", "O Semeador", "O Joio e o Trigo"],
+            correct: "Os Talentos",
+            ref: "Mateus 25:14-30 — A um deu cinco talentos, e a outro dois, e a outro um, a cada um segundo a sua capacidade."
+          },
+          {
+            q: "Qual parábola fala de dez virgens esperando o noivo?",
+            options: ["As Dez Virgens", "O Banquete de Casamento", "O Rico e Lázaro", "A Figueira Estéril"],
+            correct: "As Dez Virgens",
+            ref: "Mateus 25:1-13 — O Reino dos céus será semelhante a dez virgens que, tomando as suas lâmpadas, saíram ao encontro do esposo."
+          }
+        ]
+      },
+      {
+        id: 10,
+        title: "Curiosidades Bíblicas",
+        emoji: "📖",
+        desc: "Fatos fascinantes, números, livros e detalhes especiais das Escrituras Sagradas.",
+        questions: [
+          {
+            q: "Quantos livros tem a Bíblia?",
+            options: ["66", "73", "39", "27"],
+            correct: "66",
+            ref: "2 Timóteo 3:16 — Toda a Escritura é divinamente inspirada. O cânon bíblico protestante possui 66 livros (39 no AT e 27 no NT)."
+          },
+          {
+            q: "Quantos livros tem o Novo Testamento?",
+            options: ["27", "39", "66", "12"],
+            correct: "27",
+            ref: "Lucas 24:44 — O Novo Testamento é composto por 27 livros inspirados que testificam de Cristo e da Nova Aliança."
+          },
+          {
+            q: "Qual é o primeiro livro da Bíblia?",
+            options: ["Gênesis", "Êxodo", "Jó", "Salmos"],
+            correct: "Gênesis",
+            ref: "Gênesis 1:1 — No princípio criou Deus o céu e a terra."
+          },
+          {
+            q: "Qual é o último livro da Bíblia?",
+            options: ["Apocalipse", "Judas", "Malaquias", "Atos"],
+            correct: "Apocalipse",
+            ref: "Apocalipse 22:21 — A graça de nosso Senhor Jesus Cristo seja com todos vós. Amém."
+          },
+          {
+            q: "Qual livro tem mais capítulos?",
+            options: ["Salmos", "Isaías", "Gênesis", "Jeremias"],
+            correct: "Salmos",
+            ref: "Salmo 150 — O livro de Salmos possui exatamente 150 capítulos e cânticos de louvor."
+          },
+          {
+            q: "Qual é o versículo mais conhecido da Bíblia?",
+            options: ["João 3:16", "Salmos 23:1", "Gênesis 1:1", "Filipenses 4:13"],
+            correct: "João 3:16",
+            ref: "João 3:16 — Porque Deus amou o mundo de tal maneira que deu o seu Filho unigênito, para que todo aquele que nele crê não pereça, mas tenha a vida eterna."
+          },
+          {
+            q: "Qual é o menor livro da Bíblia?",
+            options: ["3 João", "Judas", "Filemom", "Obadias"],
+            correct: "3 João",
+            ref: "3 João 1 — A terceira carta de João contém apenas 14 versículos e o menor número de palavras no texto original."
+          },
+          {
+            q: "Quantos capítulos tem o Salmo 119?",
+            options: ["176", "150", "100", "89"],
+            correct: "176",
+            ref: "Salmo 119 — O Salmo 119 possui 176 versículos organizados segundo as letras do alfabeto hebraico."
+          },
+          {
+            q: "Qual livro conta a história da criação do mundo?",
+            options: ["Gênesis", "Êxodo", "Jó", "Salmos"],
+            correct: "Gênesis",
+            ref: "Gênesis 1 — O relato sagrado da criação de todas as coisas em seis dias."
+          },
+          {
+            q: "Qual apóstolo escreveu mais livros do Novo Testamento?",
+            options: ["Paulo", "Pedro", "João", "Tiago"],
+            correct: "Paulo",
+            ref: "Romanos 1:1 — O apóstolo Paulo escreveu 13 epístolas canônicas às igrejas e colaboradores."
+          }
+        ]
+      }
+    ];
+
+    /* ==========================================================================
+       ESTADO DA APLICAÇÃO
+       ========================================================================== */
+    let currentQuizIndex = 0;
+    let currentQuestionIndex = 0;
+    let currentScore = 0;
+    let timerInterval = null;
+    let timeLeft = 30;
+    const TOTAL_SECONDS = 30;
+    const CIRCLE_RADIUS = 54;
+    const CIRCLE_CIRCUMFERENCE = 2 * Math.PI * CIRCLE_RADIUS; // ~339.292
+    let hasAnsweredCurrentQuestion = false;
+
+    // Elementos DOM
+    const menuScreen = document.getElementById('menuScreen');
+    const gameScreen = document.getElementById('gameScreen');
+    const resultScreen = document.getElementById('resultScreen');
+    const quizGrid = document.getElementById('quizGrid');
+
+    const gameQuizEmoji = document.getElementById('gameQuizEmoji');
+    const gameQuizTitle = document.getElementById('gameQuizTitle');
+    const questionCounter = document.getElementById('questionCounter');
+    const progressBar = document.getElementById('progressBar');
+    const timerCircle = document.getElementById('timerCircle');
+    const timerNumber = document.getElementById('timerNumber');
+    const timerPulseWrap = document.getElementById('timerPulseWrap');
+    const questionText = document.getElementById('questionText');
+    const optionsGrid = document.getElementById('optionsGrid');
+    const feedbackBox = document.getElementById('feedbackBox');
+    const feedbackTitle = document.getElementById('feedbackTitle');
+    const feedbackRef = document.getElementById('feedbackRef');
+    const btnNextQuestion = document.getElementById('btnNextQuestion');
+
+    const resultTrophy = document.getElementById('resultTrophy');
+    const resultStars = document.getElementById('resultStars');
+    const resultTitle = document.getElementById('resultTitle');
+    const resultScore = document.getElementById('resultScore');
+    const resultMessage = document.getElementById('resultMessage');
+
+    /* ==========================================================================
+       INICIALIZAÇÃO & RENDERIZAÇÃO DO MENU
+       ========================================================================== */
+    function initApp() {
+      renderQuizMenu();
+    }
+
+    function renderQuizMenu() {
+      quizGrid.innerHTML = '';
+      QUIZZES_DATA.forEach((quiz, index) => {
+        const card = document.createElement('div');
+        card.className = 'quiz-card';
+        card.setAttribute('role', 'button');
+        card.setAttribute('tabindex', '0');
+        card.setAttribute('aria-label', `Iniciar ${quiz.title}`);
+
+        card.innerHTML = `
+          <div>
+            <div class="quiz-card-head">
+              <span class="quiz-card-emoji">${quiz.emoji}</span>
+              <div>
+                <div class="quiz-card-title">${quiz.title}</div>
+              </div>
+            </div>
+            <p class="quiz-card-desc">${quiz.desc}</p>
+          </div>
+          <div class="quiz-card-footer">
+            <span class="quiz-card-badge">10 perguntas</span>
+            <span class="quiz-card-cta">Iniciar Quiz ➜</span>
+          </div>
+        `;
+
+        const startAction = () => startQuiz(index);
+        card.addEventListener('click', startAction);
+        card.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            startAction();
+          }
+        });
+
+        quizGrid.appendChild(card);
+      });
+    }
+
+    /* ==========================================================================
+       NAVEGAÇÃO ENTRE TELAS
+       ========================================================================== */
+    function showScreen(screen) {
+      clearInterval(timerInterval);
+      menuScreen.classList.remove('active');
+      gameScreen.classList.remove('active');
+      resultScreen.classList.remove('active');
+      screen.classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function returnToMenu() {
+      stopConfetti();
+      clearInterval(timerInterval);
+      showScreen(menuScreen);
+    }
+
+    /* ==========================================================================
+       LÓGICA DO JOGO
+       ========================================================================== */
+    function startQuiz(quizIdx) {
+      currentQuizIndex = quizIdx;
+      currentQuestionIndex = 0;
+      currentScore = 0;
+      stopConfetti();
+
+      const quiz = QUIZZES_DATA[currentQuizIndex];
+      gameQuizEmoji.textContent = quiz.emoji;
+      gameQuizTitle.textContent = quiz.title;
+
+      showScreen(gameScreen);
+      loadQuestion();
+    }
+
+    function restartCurrentQuiz() {
+      startQuiz(currentQuizIndex);
+    }
+
+    function loadQuestion() {
+      clearInterval(timerInterval);
+      hasAnsweredCurrentQuestion = false;
+
+      const quiz = QUIZZES_DATA[currentQuizIndex];
+      const qData = quiz.questions[currentQuestionIndex];
+
+      // Atualiza cabeçalho e contadores
+      questionCounter.textContent = `${currentQuestionIndex + 1} / 10`;
+      const progressPercent = ((currentQuestionIndex + 1) / 10) * 100;
+      progressBar.style.width = `${progressPercent}%`;
+
+      // Atualiza texto da pergunta
+      questionText.textContent = qData.q;
+
+      // Reseta feedback e botão avançar
+      feedbackBox.className = 'feedback-box';
+      feedbackBox.style.display = 'none';
+      btnNextQuestion.style.display = 'none';
+
+      // Atualiza texto do botão final se for última pergunta
+      if (currentQuestionIndex === 9) {
+        btnNextQuestion.innerHTML = 'VER RESULTADO 🏆';
+      } else {
+        btnNextQuestion.innerHTML = 'PRÓXIMA PERGUNTA ➜';
+      }
+
+      // Renderiza as alternativas
+      optionsGrid.innerHTML = '';
+      const letters = ['A', 'B', 'C', 'D'];
+      qData.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'option-btn';
+        btn.setAttribute('data-option', opt);
+        btn.innerHTML = `
+          <span class="option-letter">${letters[idx]}</span>
+          <span class="option-text">${opt}</span>
+        `;
+        btn.onclick = () => selectAnswer(opt);
+        optionsGrid.appendChild(btn);
+      });
+
+      // Inicia timer
+      startTimer();
+    }
+
+    function startTimer() {
+      timeLeft = TOTAL_SECONDS;
+      updateTimerDisplay();
+
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        if (timeLeft <= 0) {
+          timeLeft = 0;
+          updateTimerDisplay();
+          clearInterval(timerInterval);
+          handleTimeout();
+        } else {
+          updateTimerDisplay();
+        }
+      }, 1000);
+    }
+
+    function updateTimerDisplay() {
+      timerNumber.textContent = timeLeft;
+
+      // Cálculo do stroke-dashoffset: 0s = circunferência toda gasta
+      const progressRatio = timeLeft / TOTAL_SECONDS;
+      const offset = CIRCLE_CIRCUMFERENCE * (1 - progressRatio);
+      timerCircle.style.strokeDashoffset = offset;
+
+      // Cores: Verde (30-16s), Amarelo (15-11s), Vermelho pulsante (10-0s)
+      if (timeLeft >= 16) {
+        timerCircle.setAttribute('stroke', '#22c55e');
+        timerNumber.style.color = '#ffffff';
+        timerPulseWrap.classList.remove('pulse-danger');
+      } else if (timeLeft >= 11) {
+        timerCircle.setAttribute('stroke', '#eab308');
+        timerNumber.style.color = '#fde047';
+        timerPulseWrap.classList.remove('pulse-danger');
+      } else {
+        timerCircle.setAttribute('stroke', '#ef4444');
+        timerNumber.style.color = '#f87171';
+        timerPulseWrap.classList.add('pulse-danger');
+      }
+    }
+
+    function selectAnswer(selectedText) {
+      if (hasAnsweredCurrentQuestion) return;
+      hasAnsweredCurrentQuestion = true;
+      clearInterval(timerInterval);
+      timerPulseWrap.classList.remove('pulse-danger');
+
+      const quiz = QUIZZES_DATA[currentQuizIndex];
+      const qData = quiz.questions[currentQuestionIndex];
+      const isCorrect = (selectedText === qData.correct);
+
+      // Desabilita botões e colore certo/errado
+      const buttons = optionsGrid.querySelectorAll('.option-btn');
+      buttons.forEach(btn => {
+        btn.disabled = true;
+        const optVal = btn.getAttribute('data-option');
+        if (optVal === qData.correct) {
+          btn.classList.add('correct');
+        } else if (optVal === selectedText && !isCorrect) {
+          btn.classList.add('incorrect');
+        }
+      });
+
+      // Feedback
+      if (isCorrect) {
+        currentScore += 100;
+        feedbackBox.className = 'feedback-box correct';
+        feedbackTitle.innerHTML = '✅ Resposta Correta! (+100 pontos)';
+      } else {
+        feedbackBox.className = 'feedback-box incorrect';
+        feedbackTitle.innerHTML = `❌ Resposta Incorreta! A correta é: <strong>${qData.correct}</strong>`;
+      }
+      feedbackRef.innerHTML = `<strong>Referência:</strong> ${qData.ref}`;
+      feedbackBox.style.display = 'block';
+
+      btnNextQuestion.style.display = 'inline-flex';
+      btnNextQuestion.focus();
+    }
+
+    function handleTimeout() {
+      if (hasAnsweredCurrentQuestion) return;
+      hasAnsweredCurrentQuestion = true;
+      timerPulseWrap.classList.remove('pulse-danger');
+
+      const quiz = QUIZZES_DATA[currentQuizIndex];
+      const qData = quiz.questions[currentQuestionIndex];
+
+      const buttons = optionsGrid.querySelectorAll('.option-btn');
+      buttons.forEach(btn => {
+        btn.disabled = true;
+        const optVal = btn.getAttribute('data-option');
+        if (optVal === qData.correct) {
+          btn.classList.add('correct');
+        }
+      });
+
+      feedbackBox.className = 'feedback-box timeout';
+      feedbackTitle.innerHTML = `⏰ Tempo Esgotado! A resposta correta era: <strong>${qData.correct}</strong>`;
+      feedbackRef.innerHTML = `<strong>Referência:</strong> ${qData.ref}`;
+      feedbackBox.style.display = 'block';
+
+      btnNextQuestion.style.display = 'inline-flex';
+      btnNextQuestion.focus();
+    }
+
+    function goToNextQuestion() {
+      if (currentQuestionIndex < 9) {
+        currentQuestionIndex++;
+        loadQuestion();
+      } else {
+        finishQuiz();
+      }
+    }
+
+    /* ==========================================================================
+       TELA DE RESULTADOS
+       ========================================================================== */
+    function finishQuiz() {
+      clearInterval(timerInterval);
+      showScreen(resultScreen);
+
+      resultScore.textContent = currentScore;
+
+      if (currentScore >= 900) {
+        resultTrophy.textContent = '🏆';
+        resultStars.textContent = '⭐⭐⭐⭐⭐';
+        resultTitle.textContent = 'Excelente! Conhecimento Notável!';
+        resultMessage.textContent = 'Glória a Deus! Você demonstrou pleno domínio das Sagradas Escrituras neste quiz. Continue alimentando sua fé na Palavra!';
+        startConfetti();
+      } else if (currentScore >= 700) {
+        resultTrophy.textContent = '🥇';
+        resultStars.textContent = '⭐⭐⭐⭐';
+        resultTitle.textContent = 'Muito Bom Desempenho!';
+        resultMessage.textContent = 'Parabéns pelo belo resultado! Seu conhecimento bíblico é sólido. Com mais uma revisão você atinge a nota máxima!';
+      } else if (currentScore >= 500) {
+        resultTrophy.textContent = '🥈';
+        resultStars.textContent = '⭐⭐⭐';
+        resultTitle.textContent = 'Bom Trabalho!';
+        resultMessage.textContent = 'Você teve um bom aproveitamento! Que a busca diária pela Palavra de Deus continue iluminando o seu caminho.';
+      } else {
+        resultTrophy.textContent = '📖';
+        resultStars.textContent = '⭐⭐';
+        resultTitle.textContent = 'Continue Estudando!';
+        resultMessage.textContent = 'Não desanime! Cada pergunta é uma oportunidade de aprender mais sobre o plano de Deus. Jogue novamente e fortaleça sua fé!';
+      }
+    }
+
+    /* ==========================================================================
+       SISTEMA DE CONFETES (Canvas nativo, sem bibliotecas externas)
+       ========================================================================== */
+    let confettiAnimationId = null;
+    let confettiParticles = [];
+
+    function startConfetti() {
+      const canvas = document.getElementById('confettiCanvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      confettiParticles = [];
+      const colors = ['#d4af37', '#f5d76e', '#22c55e', '#38bdf8', '#f43f5e', '#a855f7'];
+
+      for (let i = 0; i < 110; i++) {
+        confettiParticles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * -canvas.height,
+          w: Math.random() * 9 + 5,
+          h: Math.random() * 9 + 5,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          vx: Math.random() * 4 - 2,
+          vy: Math.random() * 3 + 2,
+          rotation: Math.random() * 360,
+          rotationSpeed: Math.random() * 6 - 3
+        });
+      }
+
+      function updateAndDraw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        confettiParticles.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.rotation += p.rotationSpeed;
+
+          if (p.y > canvas.height) {
+            p.y = -20;
+            p.x = Math.random() * canvas.width;
+          }
+
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate((p.rotation * Math.PI) / 180);
+          ctx.fillStyle = p.color;
+          ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+          ctx.restore();
+        });
+
+        confettiAnimationId = requestAnimationFrame(updateAndDraw);
+      }
+
+      cancelAnimationFrame(confettiAnimationId);
+      updateAndDraw();
+
+      // Para automaticamente após 9 segundos
+      setTimeout(stopConfetti, 9000);
+    }
+
+    function stopConfetti() {
+      if (confettiAnimationId) {
+        cancelAnimationFrame(confettiAnimationId);
+        confettiAnimationId = null;
+      }
+      const canvas = document.getElementById('confettiCanvas');
+      if (canvas) {
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+
+    window.addEventListener('resize', () => {
+      const canvas = document.getElementById('confettiCanvas');
+      if (canvas) {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+    });
+
+    // Início automático após carregamento
+    document.addEventListener('DOMContentLoaded', initApp);
+  </script>
+<script>
+/* Skip artifact shell — fixed helpers served beside every artifact. */
+(function () {
+  "use strict";
+
+  var fmt = {
+    num: function (v, opts) { return new Intl.NumberFormat("pt-BR", opts || {}).format(v); },
+    brl: function (v) { return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(v); },
+    pct: function (v) { return new Intl.NumberFormat("pt-BR", { style: "percent", maximumFractionDigits: 1 }).format(v); }
+  };
+
+  // axisFmt keeps axis tick labels short (compact notation) so long values
+  // (e.g. full BRL amounts) never clip against the plot edge.
+  function axisFmt(v) {
+    return fmt.num(v, { notation: "compact", maximumFractionDigits: 1 });
+  }
+
+  // format accepts a function OR one of the fmt names ("num" | "brl" | "pct").
+  function coerceFormat(spec) {
+    if (typeof spec === "function") return spec;
+    if (typeof spec === "string" && fmt[spec]) return fmt[spec];
+    return function (v) { return fmt.num(v); };
+  }
+
+  function accent() {
+    return getComputedStyle(document.documentElement).getPropertyValue("--accent").trim() || "#2563eb";
+  }
+  function mutedColor() {
+    return getComputedStyle(document.documentElement).getPropertyValue("--text-muted").trim() || "#5b6472";
+  }
+  function svgEl(tag, attrs) {
+    var el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+    for (var k in attrs) el.setAttribute(k, attrs[k]);
+    return el;
+  }
+  function frame(el, w, h) {
+    var svg = svgEl("svg", { viewBox: "0 0 " + w + " " + h, role: "img" });
+    el.innerHTML = "";
+    el.appendChild(svg);
+    return svg;
+  }
+
+  // maxOf guards the axis scale: empty values would give -Infinity (truthy,
+  // so "|| 1" can't catch it) and a non-positive max would flip the chart.
+  function maxOf(values) {
+    var m = values.length ? Math.max.apply(null, values) : 0;
+    return m > 0 ? m : 1;
+  }
+
+  // bar(el, {labels:[], values:[], color?, format?}) — vertical bar chart.
+  function bar(el, cfg) {
+    var W = 640, H = 280, padL = 46, padB = 30, padT = 12;
+    var svg = frame(el, W, H);
+    var max = maxOf(cfg.values);
+    var n = cfg.values.length;
+    var plotW = W - padL - 12, plotH = H - padT - padB;
+    var step = plotW / n, bw = Math.min(step * 0.62, 64);
+    var color = cfg.color || accent();
+    var f = coerceFormat(cfg.format);
+    for (var g = 0; g <= 4; g++) {
+      var gy = padT + plotH - (plotH * g) / 4;
+      svg.appendChild(svgEl("line", { x1: padL, y1: gy, x2: W - 12, y2: gy, stroke: "currentColor", "stroke-opacity": 0.08 }));
+      var lbl = svgEl("text", { x: padL - 8, y: gy + 4, "text-anchor": "end", "font-size": 10, fill: mutedColor() });
+      lbl.textContent = axisFmt((max * g) / 4);
+      svg.appendChild(lbl);
+    }
+    cfg.values.forEach(function (v, i) {
+      var bh = Math.max(0, (v / max) * plotH);
+      var x = padL + i * step + (step - bw) / 2;
+      var y = padT + plotH - bh;
+      var r = svgEl("rect", { x: x, y: y, width: bw, height: bh, rx: 4, fill: color });
+      var t = svgEl("title", {});
+      t.textContent = cfg.labels[i] + ": " + f(v);
+      r.appendChild(t);
+      svg.appendChild(r);
+      var tx = svgEl("text", { x: x + bw / 2, y: H - 10, "text-anchor": "middle", "font-size": 11, fill: mutedColor() });
+      tx.textContent = cfg.labels[i];
+      svg.appendChild(tx);
+    });
+  }
+
+  // line(el, {labels:[], values:[], color?, format?}) — single-series line.
+  function line(el, cfg) {
+    var W = 640, H = 280, padL = 46, padB = 30, padT = 12;
+    var svg = frame(el, W, H);
+    var max = maxOf(cfg.values);
+    var n = cfg.values.length;
+    var plotW = W - padL - 16, plotH = H - padT - padB;
+    var color = cfg.color || accent();
+    var f = coerceFormat(cfg.format);
+    for (var g = 0; g <= 4; g++) {
+      var gy = padT + plotH - (plotH * g) / 4;
+      svg.appendChild(svgEl("line", { x1: padL, y1: gy, x2: W - 16, y2: gy, stroke: "currentColor", "stroke-opacity": 0.08 }));
+      var lbl = svgEl("text", { x: padL - 8, y: gy + 4, "text-anchor": "end", "font-size": 10, fill: mutedColor() });
+      lbl.textContent = axisFmt((max * g) / 4);
+      svg.appendChild(lbl);
+    }
+    var pts = cfg.values.map(function (v, i) {
+      var x = padL + (n === 1 ? plotW / 2 : (plotW * i) / (n - 1));
+      var y = padT + plotH - (v / max) * plotH;
+      return [x, y];
+    });
+    var d = pts.map(function (p, i) { return (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1); }).join(" ");
+    svg.appendChild(svgEl("path", { d: d, fill: "none", stroke: color, "stroke-width": 2, "stroke-linejoin": "round" }));
+    pts.forEach(function (p, i) {
+      var c = svgEl("circle", { cx: p[0], cy: p[1], r: 3.5, fill: color });
+      var t = svgEl("title", {});
+      t.textContent = cfg.labels[i] + ": " + f(cfg.values[i]);
+      c.appendChild(t);
+      svg.appendChild(c);
+      var tx = svgEl("text", { x: p[0], y: H - 10, "text-anchor": "middle", "font-size": 11, fill: mutedColor() });
+      tx.textContent = cfg.labels[i];
+      svg.appendChild(tx);
+    });
+  }
+
+  // donut(el, {labels:[], values:[], colors?}) — donut with center total.
+  function donut(el, cfg) {
+    var W = 320, H = 280, cx = W / 2, cy = H / 2, R = 92, r = 58;
+    var svg = frame(el, W, H);
+    var total = cfg.values.reduce(function (a, b) { return a + b; }, 0) || 1;
+    var palette = cfg.colors || [accent(), "#1baf7a", "#eda100", "#e34948", "#4a3aa7", "#e87ba4"];
+    var a0 = -Math.PI / 2;
+    cfg.values.forEach(function (v, i) {
+      var a1 = a0 + (v / total) * Math.PI * 2;
+      var large = a1 - a0 > Math.PI ? 1 : 0;
+      var p = ["M", cx + R * Math.cos(a0), cy + R * Math.sin(a0),
+        "A", R, R, 0, large, 1, cx + R * Math.cos(a1), cy + R * Math.sin(a1),
+        "L", cx + r * Math.cos(a1), cy + r * Math.sin(a1),
+        "A", r, r, 0, large, 0, cx + r * Math.cos(a0), cy + r * Math.sin(a0), "Z"].join(" ");
+      var path = svgEl("path", { d: p, fill: palette[i % palette.length] });
+      var t = svgEl("title", {});
+      t.textContent = cfg.labels[i] + ": " + fmt.num(v) + " (" + fmt.pct(v / total) + ")";
+      path.appendChild(t);
+      svg.appendChild(path);
+      a0 = a1;
+    });
+    var center = svgEl("text", { x: cx, y: cy + 5, "text-anchor": "middle", "font-size": 20, "font-weight": 650, fill: "currentColor" });
+    center.textContent = fmt.num(total);
+    svg.appendChild(center);
+  }
+
+  window.skipShell = { fmt: fmt };
+  window.skipChart = { bar: bar, line: line, donut: donut };
+})();
+
+</script>
+</body>
+</html>
