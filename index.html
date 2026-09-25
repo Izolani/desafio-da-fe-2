@@ -169,7 +169,8 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       max-width: 90%;
     }
 
-    .church-logo-img {
+    .church-logo-img,
+    .church-logo-svg {
       max-height: 54px;
       width: auto;
       object-fit: contain;
@@ -734,6 +735,40 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       outline-offset: 3px;
     }
   </style>
+  <script>
+    /* Sistema de fallback da Logo em 3 níveis */
+    function getChurchLogoSvg() {
+      return `<svg class="church-logo-svg" viewBox="0 0 240 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Logomarca da Igreja Evangélica Cristo Vive de Paracambi">
+        <rect width="240" height="180" fill="#ffffff" rx="8"/>
+        <text x="120" y="44" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="13" font-weight="800" fill="#0d2b6b" text-anchor="middle" letter-spacing="2">IGREJA EVANGÉLICA</text>
+        <text x="120" y="98" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="28" font-weight="900" fill="#0047bb" text-anchor="middle" letter-spacing="-0.5">CRISTOVIVE</text>
+        <g transform="translate(98, 122)">
+          <rect width="132" height="34" rx="4" fill="#0047bb"/>
+          <text x="66" y="22" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" fill="#ffffff" text-anchor="middle">De Paracambi</text>
+        </g>
+      </svg>`;
+    }
+
+    function handleLogoFallback(img) {
+      const step = parseInt(img.getAttribute('data-step') || '1', 10);
+      if (step === 1) {
+        // NÍVEL 2: Falhou na URL remota, tenta logo local logo.jpeg
+        img.setAttribute('data-step', '2');
+        img.src = 'logo.jpeg';
+      } else if (step === 2) {
+        // NÍVEL 2 (continuação): Falhou em logo.jpeg, tenta logo.png
+        img.setAttribute('data-step', '3');
+        img.src = 'logo.png';
+      } else {
+        // NÍVEL 3 (garantia total): Falharam todos os arquivos, renderiza a réplica SVG inline
+        img.onerror = null;
+        const wrap = img.closest('.church-logo-wrap');
+        if (wrap) {
+          wrap.innerHTML = getChurchLogoSvg();
+        }
+      }
+    }
+  </script>
 </head>
 <body>
 
@@ -745,10 +780,11 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
     <header class="brand-header">
       <div class="church-logo-wrap">
         <img 
-          src="https://adapta-one-prod.s3.sa-east-1.amazonaws.com/alan.izolani%40gmail.com/png/image-01a0d368-1097-73ed-9563-71098792b118.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIA3FLD6RMYLYFE2L2Q%2F20260924%2Fsa-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260924T215333Z&X-Amz-Expires=3600&X-Amz-Signature=99a1303c11bee244dcbc8bcbf5993a553440756cb529f72981d5473105a3195d&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject"
+          src="https://adapta-one-prod.s3.sa-east-1.amazonaws.com/alan.izolani%40gmail.com/png/image-01a0daa1-165c-738d-a986-e1b1bada8516.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIA3FLD6RMYLYFE2L2Q%2F20260925%2Fsa-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260925T221440Z&X-Amz-Expires=3600&X-Amz-Signature=a43c4e88b9ab6900473c9c90e0b1d6fb1b7eeffea3e8328a7c6beb855b4e39d7&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject"
           alt="Logomarca da Igreja Evangélica Cristo Vive de Paracambi"
           class="church-logo-img"
-          onerror="this.onerror=null;this.src='logo.jpeg';"
+          data-step="1"
+          onerror="handleLogoFallback(this)"
         >
       </div>
       <h1 class="app-title">SÉRIE DESAFIO DA FÉ</h1>
@@ -773,10 +809,11 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
     <header class="brand-header">
       <div class="church-logo-wrap">
         <img 
-          src="https://adapta-one-prod.s3.sa-east-1.amazonaws.com/alan.izolani%40gmail.com/png/image-01a0d368-1097-73ed-9563-71098792b118.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIA3FLD6RMYLYFE2L2Q%2F20260924%2Fsa-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260924T215333Z&X-Amz-Expires=3600&X-Amz-Signature=99a1303c11bee244dcbc8bcbf5993a553440756cb529f72981d5473105a3195d&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject"
+          src="https://adapta-one-prod.s3.sa-east-1.amazonaws.com/alan.izolani%40gmail.com/png/image-01a0daa1-165c-738d-a986-e1b1bada8516.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIA3FLD6RMYLYFE2L2Q%2F20260925%2Fsa-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260925T221440Z&X-Amz-Expires=3600&X-Amz-Signature=a43c4e88b9ab6900473c9c90e0b1d6fb1b7eeffea3e8328a7c6beb855b4e39d7&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject"
           alt="Logomarca da Igreja Evangélica Cristo Vive de Paracambi"
           class="church-logo-img"
-          onerror="this.onerror=null;this.src='logo.jpeg';"
+          data-step="1"
+          onerror="handleLogoFallback(this)"
         >
       </div>
     </header>
@@ -838,10 +875,11 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
     <header class="brand-header">
       <div class="church-logo-wrap">
         <img 
-          src="https://adapta-one-prod.s3.sa-east-1.amazonaws.com/alan.izolani%40gmail.com/png/image-01a0d368-1097-73ed-9563-71098792b118.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIA3FLD6RMYLYFE2L2Q%2F20260924%2Fsa-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260924T215333Z&X-Amz-Expires=3600&X-Amz-Signature=99a1303c11bee244dcbc8bcbf5993a553440756cb529f72981d5473105a3195d&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject"
+          src="https://adapta-one-prod.s3.sa-east-1.amazonaws.com/alan.izolani%40gmail.com/png/image-01a0daa1-165c-738d-a986-e1b1bada8516.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIA3FLD6RMYLYFE2L2Q%2F20260925%2Fsa-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260925T221440Z&X-Amz-Expires=3600&X-Amz-Signature=a43c4e88b9ab6900473c9c90e0b1d6fb1b7eeffea3e8328a7c6beb855b4e39d7&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject"
           alt="Logomarca da Igreja Evangélica Cristo Vive de Paracambi"
           class="church-logo-img"
-          onerror="this.onerror=null;this.src='logo.jpeg';"
+          data-step="1"
+          onerror="handleLogoFallback(this)"
         >
       </div>
     </header>
